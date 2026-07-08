@@ -1,0 +1,297 @@
+/* ------------------------------------------------------------------ */
+/* Hero — single-column centered layout                                */
+/* ------------------------------------------------------------------ */
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem 5rem;
+    max-width: 680px;
+    margin: 0 auto;
+    gap: 3rem;
+    /* override the 2-col grid from style.css */
+    grid-template-columns: unset;
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero text block                                                      */
+/* ------------------------------------------------------------------ */
+
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    margin-bottom: 0;
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #1a2744;
+    margin-bottom: 0;
+}
+
+.hero-title-accent {
+    display: block;
+    color: #22c55e;
+    font-style: normal;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Button group                                                         */
+/* ------------------------------------------------------------------ */
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-group {
+    display: inline-flex;
+    background: #111;
+    border-radius: 12px;
+    padding: 4px;
+    gap: 3px;
+}
+
+.btn-group-item {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 9px;
+    background: #222;
+    transition: background 0.2s;
+}
+
+.btn-group-item:hover { background: var(--accent); }
+
+/* ------------------------------------------------------------------ */
+/* Dashboard card                                                       */
+/* ------------------------------------------------------------------ */
+
+.hero-dashboard {
+    width: 100%;
+    max-width: 600px;
+}
+
+.dashboard-card {
+    background: var(--paper-warm);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* macOS-style window dots */
+.dashboard-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot-red       { background: #ff5f57; }
+.dot-yellow    { background: #febc2e; }
+.dot-green-dot { background: #28c840; }
+
+/* Stat rows */
+.dashboard-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: left;
+}
+
+.stat-label {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
+}
+
+.stat-value {
+    font-family: var(--font-body);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.stat-meta {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    margin-top: 0.2rem;
+}
+
+.stat-meta.positive {
+    color: #22c55e;
+    font-weight: 500;
+}
+
+/* Category progress bars */
+.dashboard-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.db-bar-row {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.db-bar-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-align: left;
+}
+
+.db-bar-track {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.db-bar {
+    height: 100%;
+    border-radius: 999px;
+}
+
+.db-bar-orange { background: #f59e0b; }
+.db-bar-blue   { background: #3b82f6; }
+.db-bar-purple { background: #8b5cf6; }
+
+/* ------------------------------------------------------------------ */
+/* Video modal                                                         */
+/* ------------------------------------------------------------------ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.modal-overlay.is-open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-box {
+    position: relative;
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 840px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.modal-close:hover { background: rgba(0, 0, 0, 0.85); }
+
+.modal-video-wrap {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.modal-video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 600px) {
+    .hero { padding: 3rem 1rem 4rem; }
+    .btn-group { flex-direction: column; width: 100%; }
+    .btn-group-item { text-align: center; }
+}
