@@ -1,8 +1,8 @@
 venv/
 expense_tracker.db
+spendly.db
 .env
 .DS_Store
-.claude/plans/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
