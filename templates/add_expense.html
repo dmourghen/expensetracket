@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense — Spendly{% endblock %}
+
+{% block head %}
+<style>
+    .expense-section {
+        min-height: calc(100vh - 60px - 100px);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 3rem 2rem;
+    }
+
+    .expense-container {
+        width: 100%;
+        max-width: 520px;
+    }
+
+    .expense-header {
+        margin-bottom: 2rem;
+    }
+
+    .expense-title {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        color: var(--ink);
+        margin-bottom: 0.35rem;
+    }
+
+    .expense-subtitle {
+        font-size: 0.9rem;
+        color: var(--ink-muted);
+    }
+
+    .expense-card {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .expense-error {
+        background: var(--danger-light);
+        color: var(--danger);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .expense-form-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        align-items: center;
+    }
+
+    .expense-cancel {
+        font-size: 0.9rem;
+        color: var(--ink-muted);
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+
+    .expense-cancel:hover {
+        color: var(--ink);
+    }
+
+    .amount-wrap {
+        position: relative;
+    }
+
+    .amount-symbol {
+        position: absolute;
+        left: 0.875rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ink-muted);
+        font-size: 0.95rem;
+        pointer-events: none;
+    }
+
+    .amount-input {
+        padding-left: 1.75rem;
+    }
+
+    .label-optional {
+        color: var(--ink-faint);
+        font-weight: 400;
+    }
+
+    .btn-submit--inline {
+        width: auto;
+        padding: 0.65rem 1.75rem;
+    }
+
+    select.form-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.875rem center;
+        padding-right: 2rem;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="expense-section">
+    <div class="expense-container">
+
+        <div class="expense-header">
+            <h1 class="expense-title">Add expense</h1>
+            <p class="expense-subtitle">Record a new transaction to keep your spending up to date.</p>
+        </div>
+
+        <div class="expense-card">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="expense-error">{{ messages[0] }}</div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('add_expense') }}">
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <div class="amount-wrap">
+                        <span class="amount-symbol">₹</span>
+                        <input type="number" id="amount" name="amount"
+                               class="form-input amount-input"
+                               placeholder="0.00" step="0.01" min="0.01"
+                               value="{{ amount or '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-input" required>
+                        <option value="" disabled {{ 'selected' if not category }}>Select a category</option>
+                        {% for cat in ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"] %}
+                        <option value="{{ cat }}" {{ 'selected' if category == cat }}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date"
+                           class="form-input"
+                           value="{{ date or today }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description <span class="label-optional">(optional)</span></label>
+                    <input type="text" id="description" name="description"
+                           class="form-input"
+                           placeholder="e.g. Grocery run"
+                           maxlength="200"
+                           value="{{ description or '' }}">
+                </div>
+
+                <div class="expense-form-actions">
+                    <button type="submit" class="btn-submit btn-submit--inline">Save Expense</button>
+                    <a href="{{ url_for('profile') }}" class="expense-cancel">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<style>
+    .profile-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem 5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    /* ---- User info card ---- */
+    .profile-card {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+    }
+
+    .profile-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--accent-light);
+        color: var(--accent);
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-weight: 700;
+    }
+
+    .profile-info-name {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        color: var(--ink);
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-info-email {
+        font-size: 0.9rem;
+        color: var(--ink-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-info-meta {
+        font-size: 0.8rem;
+        color: var(--ink-faint);
+    }
+
+    /* ---- Stats row ---- */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-card {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+    }
+
+    .stat-card-label {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card-value {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        color: var(--ink);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-card-sub {
+        font-size: 0.8rem;
+        color: var(--ink-faint);
+    }
+
+    .stat-card-value--text {
+        font-size: 1.4rem;
+    }
+
+    /* ---- Section headings ---- */
+    .section-heading {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: var(--ink);
+        margin-bottom: 1rem;
+    }
+
+    /* ---- Transaction table ---- */
+    .tx-table-wrap {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+    }
+
+    .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .tx-table th {
+        background: var(--paper-warm);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--ink-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.75rem 1.25rem;
+        text-align: left;
+    }
+
+    .tx-table td {
+        padding: 0.9rem 1.25rem;
+        font-size: 0.9rem;
+        color: var(--ink-soft);
+        border-top: 1px solid var(--border-soft);
+    }
+
+    .tx-table tr:first-child td { border-top: none; }
+
+    .tx-date {
+        color: var(--ink-muted);
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .tx-amount {
+        text-align: right;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+
+    .tx-th-amount {
+        text-align: right;
+    }
+
+    /* Category badges */
+    .badge {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+    }
+
+    .badge-food          { background: var(--accent-2-light); color: var(--accent-2); }
+    .badge-transport     { background: #e8eef8;               color: #3b6da8; }
+    .badge-bills         { background: #f3e8ff;               color: #7c3aed; }
+    .badge-health        { background: var(--danger-light);   color: var(--danger); }
+    .badge-entertainment { background: #fff3e0;               color: #b45309; }
+    .badge-shopping      { background: var(--accent-light);   color: var(--accent); }
+    .badge-other         { background: var(--paper-warm);     color: var(--ink-muted); }
+
+    /* ---- Category breakdown ---- */
+    .category-list {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cat-row {
+        display: grid;
+        grid-template-columns: 120px 1fr 80px;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .cat-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--ink-soft);
+    }
+
+    .cat-bar-track {
+        height: 8px;
+        background: var(--border-soft);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .cat-bar-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 999px;
+    }
+
+    .cat-amount {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--ink);
+        text-align: right;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 640px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .cat-row   { grid-template-columns: 90px 1fr 70px; }
+        .profile-card { flex-direction: column; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <!-- User info card -->
+    <div class="profile-card">
+        <div class="profile-avatar">
+            {{ user.name[:2].upper() }}
+        </div>
+        <div class="profile-info">
+            <div class="profile-info-name">{{ user.name }}</div>
+            <div class="profile-info-email">{{ user.email }}</div>
+            <div class="profile-info-meta">Member since {{ user.member_since }}</div>
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="profile-flash">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+        <div class="filter-presets">
+            {%- set this_m_active  = (date_from == presets.this_month[0]   and date_to == presets.this_month[1]) %}
+            {%- set last3_active   = (date_from == presets.last_3_months[0] and date_to == presets.last_3_months[1]) %}
+            {%- set last6_active   = (date_from == presets.last_6_months[0] and date_to == presets.last_6_months[1]) %}
+            {%- set all_active     = (not date_from and not date_to) %}
+            <a href="{{ url_for('profile', date_from=presets.this_month[0],   date_to=presets.this_month[1]) }}"
+               class="filter-preset{{ ' is-active' if this_m_active }}">This Month</a>
+            <a href="{{ url_for('profile', date_from=presets.last_3_months[0], date_to=presets.last_3_months[1]) }}"
+               class="filter-preset{{ ' is-active' if last3_active }}">Last 3 Months</a>
+            <a href="{{ url_for('profile', date_from=presets.last_6_months[0], date_to=presets.last_6_months[1]) }}"
+               class="filter-preset{{ ' is-active' if last6_active }}">Last 6 Months</a>
+            <a href="{{ url_for('profile') }}"
+               class="filter-preset{{ ' is-active' if all_active }}">All Time</a>
+        </div>
+        <div class="filter-divider"></div>
+        <form class="filter-custom" method="GET" action="{{ url_for('profile') }}">
+            <span class="filter-custom-label">Custom</span>
+            <input class="filter-date-input" type="date" name="date_from"
+                   value="{{ date_from or '' }}" max="{{ today }}">
+            <span class="filter-custom-label">to</span>
+            <input class="filter-date-input" type="date" name="date_to"
+                   value="{{ date_to or '' }}" max="{{ today }}">
+            <button type="submit" class="filter-apply">Apply</button>
+        </form>
+    </div>
+
+    <!-- Summary stats -->
+    <div>
+        <h2 class="section-heading">Overview</h2>
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-card-label">Total spent</div>
+                <div class="stat-card-value">₹{{ "%.0f"|format(stats.total_spent) }}</div>
+                <div class="stat-card-sub">this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">Transactions</div>
+                <div class="stat-card-value">{{ stats.transaction_count }}</div>
+                <div class="stat-card-sub">this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">Top category</div>
+                <div class="stat-card-value stat-card-value--text">{{ stats.top_category }}</div>
+                <div class="stat-card-sub">highest spend</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction history -->
+    <div>
+        <div class="section-heading-row">
+            <h2 class="section-heading">Recent transactions</h2>
+            <a href="{{ url_for('add_expense') }}" class="btn-primary">+ Add Expense</a>
+        </div>
+        <div class="tx-table-wrap">
+            <table class="tx-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th class="tx-th-amount">Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td class="tx-date">{{ tx.date }}</td>
+                        <td>{{ tx.description }}</td>
+                        <td>
+                            <span class="badge badge-{{ tx.category.lower() }}">{{ tx.category }}</span>
+                        </td>
+                        <td class="tx-amount">₹{{ "%.2f"|format(tx.amount) }}</td>
+                        <td class="tx-actions">
+                            <a href="{{ url_for('edit_expense', id=tx.id) }}" class="tx-action-link">Edit</a>
+                            <form method="POST" action="/expenses/{{ tx.id }}/delete" style="display:inline"
+                                  onsubmit="return confirm('Delete this expense?')">
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Category breakdown -->
+    <div>
+        <h2 class="section-heading">Spending by category</h2>
+        <div class="category-list">
+            {% for cat in categories %}
+            <div class="cat-row">
+                <span class="cat-name">{{ cat.name }}</span>
+                <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: {{ cat.pct }}%"></div>
+                </div>
+                <span class="cat-amount">₹{{ "%.0f"|format(cat.amount) }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
